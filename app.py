@@ -3,15 +3,16 @@ import sqlite3
 import csv
 import os
 
+# ---------------- INIT ----------------
 app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # ensures correct path for Render
 
 # ---------------- DATABASE ----------------
 def get_db():
-    conn = sqlite3.connect("students.db")
+    conn = sqlite3.connect(os.path.join(BASE_DIR, "students.db"))
     conn.row_factory = sqlite3.Row
     return conn
 
-# ---------------- TABLES ----------------
 def create_tables():
     conn = get_db()
     cur = conn.cursor()
@@ -44,15 +45,16 @@ def create_tables():
     conn.commit()
     conn.close()
 
-# ---------------- IMPORT FROM CSV ----------------
+# ---------------- IMPORT CSV ----------------
 def import_students_from_csv():
+    csv_path = os.path.join(BASE_DIR, "students.csv")
     conn = get_db()
     cur = conn.cursor()
 
     count = cur.execute("SELECT COUNT(*) FROM students").fetchone()[0]
 
-    if count == 0 and os.path.exists("students.csv"):
-        with open("students.csv", newline="") as file:
+    if count == 0 and os.path.exists(csv_path):
+        with open(csv_path, newline="") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 # Insert student
@@ -95,31 +97,23 @@ def calculate_result_and_grade(marks):
     else:
         return "Pass", "C"
 
-# ---------------- HOME + SEARCH ----------------
-
+# ---------------- ROUTES ----------------
 @app.route("/")
 def index():
     search = request.args.get("search")
     conn = get_db()
-
     query = """
         SELECT students.*, marks.id AS mark_id
         FROM students
         LEFT JOIN marks ON students.id = marks.student_id
     """
-
     if search:
         query += " WHERE students.name LIKE ? OR students.roll LIKE ?"
-        students = conn.execute(
-            query, ('%' + search + '%', '%' + search + '%')
-        ).fetchall()
+        students = conn.execute(query, ('%' + search + '%', '%' + search + '%')).fetchall()
     else:
         students = conn.execute(query).fetchall()
-
     conn.close()
     return render_template("index.html", students=students)
-
-# ---------------- ADD STUDENT ----------------
 
 @app.route("/add_student", methods=["GET", "POST"])
 def add_student():
@@ -128,37 +122,24 @@ def add_student():
         roll = request.form["roll"]
         total_days = int(request.form["total_days"])
         attended_days = int(request.form["attended_days"])
-
         attendance = (attended_days / total_days) * 100
 
         conn = get_db()
-        # Check if roll number already exists
         existing = conn.execute("SELECT * FROM students WHERE roll = ?", (roll,)).fetchone()
         if existing:
             conn.close()
             return render_template("add_student.html", error="Roll number already exists!")
-
-        conn.execute(
-            "INSERT INTO students (name, roll, attendance) VALUES (?, ?, ?)",
-            (name, roll, attendance)
-        )
+        conn.execute("INSERT INTO students (name, roll, attendance) VALUES (?, ?, ?)",
+                     (name, roll, attendance))
         conn.commit()
         conn.close()
-
         return redirect("/")
-
     return render_template("add_student.html")
-
-# ---------------- ADD MARKS ----------------
 
 @app.route("/add_marks/<int:student_id>", methods=["GET", "POST"])
 def add_marks(student_id):
     conn = get_db()
-
-    existing = conn.execute(
-        "SELECT * FROM marks WHERE student_id = ?", (student_id,)
-    ).fetchone()
-
+    existing = conn.execute("SELECT * FROM marks WHERE student_id = ?", (student_id,)).fetchone()
     if request.method == "POST":
         english = int(request.form["english"])
         maths = int(request.form["maths"])
@@ -166,7 +147,6 @@ def add_marks(student_id):
         chemistry = int(request.form["chemistry"])
         biology = int(request.form["biology"])
         computer = int(request.form["computer"])
-
         marks_list = [english, maths, physics, chemistry, biology, computer]
         total = sum(marks_list)
         result, grade = calculate_result_and_grade(marks_list)
@@ -185,49 +165,30 @@ def add_marks(student_id):
                  total, result, grade)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (student_id, *marks_list, total, result, grade))
-
         conn.commit()
         conn.close()
         return redirect("/view/" + str(student_id))
-
     conn.close()
     return render_template("add_marks.html", marks=existing)
 
-# ---------------- VIEW STUDENT ----------------
 @app.route("/view/<int:student_id>")
 def view_student(student_id):
     conn = get_db()
-
-    student = conn.execute(
-        "SELECT * FROM students WHERE id = ?", (student_id,)
-    ).fetchone()
-
-    marks = conn.execute(
-        "SELECT * FROM marks WHERE student_id = ?", (student_id,)
-    ).fetchone()
-
+    student = conn.execute("SELECT * FROM students WHERE id = ?", (student_id,)).fetchone()
+    marks = conn.execute("SELECT * FROM marks WHERE student_id = ?", (student_id,)).fetchone()
     conn.close()
     return render_template("view_student.html", student=student, marks=marks)
 
-# ---------------- DELETE STUDENT ----------------
 @app.route("/delete_student/<int:student_id>", methods=["POST"])
 def delete_student(student_id):
     conn = get_db()
-    # Delete marks first (foreign key relationship)
     conn.execute("DELETE FROM marks WHERE student_id = ?", (student_id,))
-    # Delete student
     conn.execute("DELETE FROM students WHERE id = ?", (student_id,))
     conn.commit()
     conn.close()
     return redirect("/")
 
-# ---------------- STATIC CSS ROUTE ----------------
-@app.route("/static/<path:filename>")
-def static_files(filename):
-    return app.send_static_file(filename)
-
-# ---------------- MAIN ----------------
-if __name__ == "__main__":
-    create_tables()
-    import_students_from_csv()
-    app.run(debug=True)
+# ---------------- INITIALIZE ----------------
+# Run this **once on startup**, also works with Gunicorn
+create_tables()
+import_students_from_csv()
