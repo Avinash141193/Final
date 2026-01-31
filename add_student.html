@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Student</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+<h2>Add Student</h2>
+
+{% if error %}
+    <p style="color:red; font-weight:bold;">{{ error }}</p>
+{% endif %}
+
+<form method="post">
+    Name: <input type="text" name="name" required><br><br>
+    Roll No: <input type="text" name="roll" required><br><br>
+    Total Working Days: <input type="number" name="total_days" required><br><br>
+    Days Attended: <input type="number" name="attended_days" required><br><br>
+
+    <button type="submit" class="add-btn">Save</button>
+</form>
+</div>
+</body>
+</html>

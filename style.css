@@ -1,0 +1,171 @@
+/* ===== Body & Container ===== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #e0f7fa, #80deea); /* soft gradient */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* ===== Card ===== */
+.card {
+    background-color: #ffffffcc; /* slightly transparent white */
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+/* ===== Table ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    background-color: #ffffffdd; /* slightly transparent */
+}
+
+th {
+    background-color: #0288d1; /* deep blue */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #b3e5fc33; /* light blue hover */
+}
+
+/* ===== Buttons ===== */
+button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 2px;
+    transition: 0.2s;
+    color: black;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+/* Button colors */
+button.add-btn {
+    background-color: #4caf50; /* green */
+}
+
+button.edit-btn {
+    background-color: #ff9800; /* orange */
+}
+
+button.view-btn {
+    background-color: #2196f3; /* blue */
+}
+
+button.delete-btn {
+    background-color: #f44336; /* red */
+}
+
+button.search-btn {
+    background-color: #1976d2; /* darker blue */
+}
+
+button.back-btn {
+    background-color: #607d8b; /* grey/blue */
+}
+
+button:disabled {
+    background-color: #b0bec5; /* greyed out */
+    cursor: not-allowed;
+}
+
+/* ===== Input Fields ===== */
+input[type="text"],
+input[type="number"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Inline form for delete button */
+form[style="display:inline;"] {
+    display: inline;
+    margin: 0;
+}
+
+.marks-table {
+    width: auto; /* shrink to content */
+    margin: 0 auto 15px auto; /* center table inside card */
+    border-collapse: collapse;
+    background-color: #ffffffdd;
+}
+
+.marks-table th, .marks-table td {
+    padding: 12px 15px; /* more compact padding */
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+.card {
+    background-color: #ffffffcc;
+    padding: 25px 40px; /* more horizontal padding for breathing room */
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: transform 0.2s;
+    text-align: left; /* keep content left-aligned */
+    max-width: 600px; /* limit card width for readability */
+}
+
+.marks-table {
+    width: 100%; /* table uses available space but still fits nicely */
+    max-width: 400px; /* optional: prevent it from stretching too much */
+    margin: 10px 0;
+    border-collapse: collapse;
+    background-color: #ffffffdd;
+}
+
+.marks-table th, .marks-table td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.student-info p {
+    margin: 5px 0;
+}
+
+.card {
+    background: #f9f6e8; /* soft cream pastel */
+    /* or for a subtle gradient */
+    /* background: linear-gradient(135deg, #f9f6e8, #eae6d9); */
+
+    padding: 25px 40px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    text-align: left;
+    max-width: 600px;
+    color: #333;
+}

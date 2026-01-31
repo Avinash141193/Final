@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Marks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+<h2>Add Marks</h2>
+
+<form method="post">
+    English:
+    <input type="number" name="english" min="0" max="100"
+        value="{{ marks.english if marks else '' }}" required>
+    <br><br>
+
+    Maths:
+    <input type="number" name="maths" min="0" max="100"
+        value="{{ marks.maths if marks else '' }}" required>
+    <br><br>
+
+    Physics:
+    <input type="number" name="physics" min="0" max="100"
+        value="{{ marks.physics if marks else '' }}" required>
+    <br><br>
+
+    Chemistry:
+    <input type="number" name="chemistry" min="0" max="100"
+        value="{{ marks.chemistry if marks else '' }}" required>
+    <br><br>
+
+    Biology:
+    <input type="number" name="biology" min="0" max="100"
+        value="{{ marks.biology if marks else '' }}" required>
+    <br><br>
+
+    Computer Science:
+    <input type="number" name="computer" min="0" max="100"
+        value="{{ marks.computer if marks else '' }}" required>
+    <br><br>
+
+    <button type="submit" class="{{ 'edit-btn' if marks else 'add-btn' }}">
+    {{ "Update Marks" if marks else "Add Marks" }}
+    </button>
+
+</form>
+</div>
+</body>
+</html>

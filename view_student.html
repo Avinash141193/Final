@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<div class="card">
+    <h2>Student Report</h2>
+
+    <div class="student-info">
+        <p><b>Name:</b> {{ student.name }}</p>
+        <p><b>Roll:</b> {{ student.roll }}</p>
+        <p><b>Attendance:</b> {{ "%.2f"|format(student.attendance) }}%</p>
+    </div>
+
+    {% if marks %}
+    <h3>Subject Marks:</h3>
+    <table class="marks-table">
+        <tr><th>Subject</th><th>Marks</th></tr>
+        <tr><td>English</td><td>{{ marks.english }}</td></tr>
+        <tr><td>Maths</td><td>{{ marks.maths }}</td></tr>
+        <tr><td>Physics</td><td>{{ marks.physics }}</td></tr>
+        <tr><td>Chemistry</td><td>{{ marks.chemistry }}</td></tr>
+        <tr><td>Biology</td><td>{{ marks.biology }}</td></tr>
+        <tr><td>Computer Science</td><td>{{ marks.computer }}</td></tr>
+    </table>
+
+    <p><b>Total Marks:</b> {{ marks.total }} / 600</p>
+    <p><b>Percentage:</b> {{ "%.2f"|format((marks.total/600)*100) }}%</p>
+    <p><b>Result:</b>
+        <span class="{{ 'pass' if marks.result == 'Pass' else 'fail' }}">
+            {{ marks.result }}
+        </span>
+    </p>
+    <p><b>Grade:</b> {{ marks.grade }}</p>
+    {% else %}
+    <p>Marks not entered yet.</p>
+    {% endif %}
+
+    <br>
+    <form action="{{ url_for('index') }}" method="get">
+        <button type="submit" class="back-btn">⬅ Back to Home</button>
+    </form>
+</div>
